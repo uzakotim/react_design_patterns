@@ -1,4 +1,19 @@
-export const UserInfo = ({ user }) => {
+// import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { useDataSource } from '../../hooks/useDataSource';
+// import { useUser } from '../../hooks/useUser';
+import axios from 'axios';
+
+const serverResource = (resourceUrl) => async () => {
+    const response = await axios.get(resourceUrl);
+    return response.data;
+};
+
+const localStorageResource = (key) => () => {
+    return localStorage.getItem(key);
+};
+export const UserInfo = ({ userId }) => {
+    const user = useDataSource(serverResource(`/users/${userId}`));
+    const message = useDataSource(localStorageResource('message'));
     const { name, age, hairColor, hobbies } = user || {};
 
     return user ? (
